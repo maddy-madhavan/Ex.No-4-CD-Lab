@@ -1,54 +1,73 @@
-Ex.No:4
-RECOGNITION OF A VALID VARIABLE WHICH STARTS WITH A LETTER FOLLOWED BY ANY NUMBER OF LETTERS OR DIGITS USING YACC
-Register Number: 212224220054
-Date:25/02/26
-Aim:
+# Ex.No:4
+# RECOGNITION OF A VALID VARIABLE WHICH STARTS WITH A LETTER FOLLOWED BY ANY NUMBER OF LETTERS OR DIGITS USING YACC
+## Register Number:212224220054
+## Date:13.03.2026
+## Aim:
 To write a YACC program to recognize a valid variable which starts with a letter followed by any number of letters or digits.
+## ALGORITHM
+1.	Start the program.
+2.	Write a program in the vi editor and save it with .l extension.
+3.	In the lex program, write the translation rules for the keywords int, float and double and for the identifier.
+4.	Write a program in the vi editor and save it with .y extension.
+5.	Compile the lex program with lex compiler to produce output file as lex.yy.c. eg $ lex filename.l
+6.	Compile the yacc program with YACC compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
+7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
+8.	Enter a statement as input and the valid variables are identified as output.
+## PROGRAM
 
-ALGORITHM
-Start the program.
-Write a program in the vi editor and save it with .l extension.
-In the lex program, write the translation rules for the keywords int, float and double and for the identifier.
-Write a program in the vi editor and save it with .y extension.
-Compile the lex program with lex compiler to produce output file as lex.yy.c. eg $ lex filename.l
-Compile the yacc program with YACC compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
-Compile these with the C compiler as gcc lex.yy.c y.tab.c
-Enter a statement as input and the valid variables are identified as output.
-PROGRAM
+expr4.l
+```
 %{
-#include "y.tab.h"
+#include "expr4.tab.h"
 %}
+
 %%
-"int" { return INT; }
-"float" { return FLOAT; }
-"double" { return DOUBLE; }
-[a-zA-Z][a-zA-Z0-9]* {
-printf("\nIdentifier is %s", yytext); return ID;
-}
-. { return yytext[0]; }
-05/05/2025, 23:19 Ex-4-CD-Lab/README.md at main · Diviyadharshini4/Ex-4-CD-Lab
-https://github.com/Diviyadharshini4/Ex-4-CD-Lab/blob/main/README.md 2/5
-\n { return '\\n'; }
+
+[a-zA-Z][a-zA-Z0-9]*    { return VARIABLE; }
+.|\n                    { return INVALID; }
+
 %%
-int yywrap() { return 1;
+int yywrap() {
+    return 1;
 }
+
+```
+expr4.y
+```
 %{
 #include <stdio.h>
-/* This YACC program is for recognizing the Expression */
+#include <stdlib.h>
+
+int yylex(void);
+void yyerror(const char *s);
 %}
-%token ID INT FLOAT DOUBLE
-%% D: T L;
-L: L ',' ID | ID;
-T: INT | FLOAT | DOUBLE;
+
+%token VARIABLE INVALID
+
 %%
-extern FILE *yyin; int main() {
-do {
-yyparse();
-} while (!feof(yyin)); return 0;
+
+input:
+    VARIABLE { printf("Valid variable name\n"); }
+  | INVALID  { printf("Invalid variable name\n"); }
+  ;
+
+%%
+
+int main() 
+{
+    printf("Enter a variable name: ");
+    yyparse();
+    return 0;
 }
-void yyerror(char *s) { fprintf(stderr, "Error: %s\n", s);
+
+void yyerror(const char *s) 
+{
+    // we handle invalid input in the grammar, so this can stay empty
 }
-Output
-image
-Result
+
+```
+## Output
+<img width="1920" height="1200" alt="Screenshot 2026-03-11 092320" src="https://github.com/user-attachments/assets/a8435ebf-2905-4273-99c9-600b8b8a7e32" />
+
+## Result
 A YACC program to recognize a valid variable which starts with a letter followed by any number of letters or digits is executed successfully and the output is verified.
